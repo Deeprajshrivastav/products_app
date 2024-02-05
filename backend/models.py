@@ -1,6 +1,7 @@
 from sqlalchemy import Enum, create_engine, Column, Integer, String, ForeignKey, Table, TIMESTAMP, text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.schema import PrimaryKeyConstraint
 
 Base = declarative_base()
 
@@ -17,6 +18,15 @@ buy_product_association = Table(
     Column('quantity', Integer),
 )
 
+cart_association = Table(
+    'cart_association',
+    Base.metadata,
+    Column('cart_id', Integer, ForeignKey('carts.id')),
+    Column('product_id', Integer, ForeignKey('products.id')),
+    Column('quantity', Integer),
+    PrimaryKeyConstraint('cart_id', 'product_id')
+
+)
 
 
 class User(Base):
@@ -29,8 +39,10 @@ class User(Base):
     address = Column(String, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('NOW()'))
     super_user = Column(Boolean, default=False )
-
+    
     orders = relationship('Order', back_populates='user')
+    cart = relationship('Cart', back_populates='user')
+
 
 class ProductType(Base):
     __tablename__ = 'product_types'
@@ -47,8 +59,9 @@ class Product(Base):
     product_type_id = Column(Integer, ForeignKey('product_types.id'))
     name = Column(String, index=True)
     product_type = relationship('ProductType')
-
     orders = relationship('Order', secondary=buy_product_association, back_populates='products')
+    carts = relationship('Cart', secondary=cart_association, back_populates='items')
+
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -59,6 +72,16 @@ class Order(Base):
     amount = Column(Integer)
     totoal_quantity = Column(Integer)
     user = relationship('User', back_populates='orders')
+
+
+
+class Cart(Base):
+    __tablename__ = 'carts'
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
+    user = relationship('User', back_populates='cart')
+    items = relationship('Product', secondary=cart_association, back_populates='carts')
 
 
 

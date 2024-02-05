@@ -68,3 +68,11 @@ class OrderSave(OrderBaseModel):
     class ConfigDict:
         from_attributes = True
 
+class AddToCart(BaseModel):
+    product_id: int
+    quantity: int
+
+class Cart(BaseModel):
+    item: List[AddToCart]
+    class ConfigDict:
+        from_attributes = True

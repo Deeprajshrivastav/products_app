@@ -30,11 +30,6 @@ def add_product_item(product: sechma.Product,
     db.refresh(product)
     return product
 
-"""
-def buy_product(product: sechma.Product,
-                current_user: str=Depends(oath2.get_current_user),
-                db:SessionLocal=Depends(get_db)): 
-"""
 
 @router.post('/buy_product')
 def create_order(order_data: sechma.OrderCreate, 
@@ -62,13 +57,12 @@ def create_order(order_data: sechma.OrderCreate,
 
             db.execute(models.buy_product_association.insert().values(
                 order_id=new_order.id, product_id=product.id, quantity=quantity))
-
         db.commit()
         db.refresh(new_order)
-
-        return new_order
+        return new_order.products
+    
     except HTTPException as http_error:
         raise http_error
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Eror: {error}")
+
