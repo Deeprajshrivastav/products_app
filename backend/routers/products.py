@@ -49,27 +49,22 @@ def create_order(order_data: sechma.OrderCreate, db:SessionLocal=Depends(get_db)
         db.add(new_order)
         db.commit()
         db.refresh(new_order)
-        i = 0
         for product_data in order_data.products:
             product_id = product_data.product_id
             quantity = product_data.quantity
             
             new_order.totoal_quantity += product_data.quantity
-            
             product = db.query(models.Product).filter(models.Product.id == product_id).first()
             amount += product.price * quantity
-            #product.quantity = quantity
             if not product:
                 raise HTTPException(status_code=404, detail=f"Product with id {product_id} not found")
-            #product.quantity = quantity
-            new_order.products.append(product)
-            #print(new_order.products[0].quantity)
+            db.execute(models.buy_product_association.insert().values(
+                order_id=new_order.id, product_id=product.id, quantity=quantity))
             db.commit()
-            
         new_order.amount = amount
         db.commit()
         db.refresh(new_order)
         return new_order.products
     except Exception as e:
-        print(e)
+        # print(e)
         raise HTTPException(status_code=500, detail=str(e))
