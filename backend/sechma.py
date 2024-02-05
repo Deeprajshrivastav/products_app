@@ -57,7 +57,6 @@ class ProductQuantity(BaseModel):
     quantity: int
 
 class OrderBaseModel(BaseModel):
-    user_id: int
     products: List[ProductQuantity]
 
 class OrderCreate(OrderBaseModel):
