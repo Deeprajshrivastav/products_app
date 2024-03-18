@@ -1,56 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from "react";
 
-function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const submitLogin = async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: JSON.stringify(
+        `grant_type=&username=${email}&password=${password}&scope=&client_id=&client_secret=`
+      ),
+    };
 
-  const handleLogin = () => {
-    // Here you would typically handle login logic, such as making an API call
-    // For simplicity, I'm just checking if the username and password are both "admin"
-    if (username === 'admin' && password === 'admin') {
-      setLoggedIn(true);
-      alert('Login successful!');
+    const response = await fetch("http://localhost:8000/login", requestOptions);
+    const data = await response.json();
+
+
+    if (!response.ok) {
+      console.log("Invalid Password")
     } else {
-      alert('Invalid username or password');
-    }
+       console.log("Password: ", data.access_token)
+     }
   };
 
-  const handleLogout = () => {
-    setLoggedIn(false);
-    setUsername('');
-    setPassword('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    submitLogin();
   };
 
   return (
-    <div>
-      {loggedIn ? (
-        <div>
-          <h1>Welcome, {username}!</h1>
-          <button onClick={handleLogout}>Logout</button>
+    <div className="column">
+      <form className="box" onSubmit={handleSubmit}>
+        <h1 className="title has-text-centered">Login</h1>
+        <div className="field">
+          <label className="label">Email Address</label>
+          <div className="control">
+            <input
+              type="text"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input"
+              required
+            />
+          </div>
         </div>
-      ) : (
-        <div>
-          <h1>Login</h1>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <br />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <br />
-          <button onClick={handleLogin}>Login</button>
+        <div className="field">
+          <label className="label">Password</label>
+          <div className="control">
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input"
+              required
+            />
+          </div>
         </div>
-      )}
+        <br />
+        <button className="button is-primary" type="submit">
+          Login
+        </button>
+      </form>
     </div>
   );
-}
+};
 
-export default LoginPage;
+export default Login;
