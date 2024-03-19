@@ -1,0 +1,38 @@
+.search-form {
+    position: relative;
+    border-radius: 16px;
+  }
+  
+  .search-input {
+    display: flex;
+    align-items: center;
+    border-radius: 16px;
+     
+  }
+  
+  .search-icon {
+    position: absolute;
+    right: 10px;
+    color: #6c757d; /* Adjust icon color as needed */
+    cursor: pointer;
+  }
+  
+  .navbar{
+     
+    background: #f4f4f4;
+    color: black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .logo{
+    font-size: 20px;
+    font-family: Lato;
+    font-weight: bold;
+  }
+  .navitem{
+    color: #000000;
+  }
+
+ 
+ 
+  
