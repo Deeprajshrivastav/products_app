@@ -39,9 +39,16 @@ class User(Base):
     address = Column(String, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('NOW()'))
     super_user = Column(Boolean, default=False )
-    
     orders = relationship('Order', back_populates='user')
     cart = relationship('Cart', back_populates='user')
+
+class ResetCode(Base):
+    __tablename__ = 'reset_codes'
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String, nullable=False)
+    reset_code = Column(String, nullable=False)
+    status = Column(Boolean, default=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('NOW()'))
 
 
 class ProductType(Base):
@@ -49,6 +56,7 @@ class ProductType(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, unique=True, nullable=True)
     desc = Column(String)
+
 
 class Product(Base):
     __tablename__ = 'products'

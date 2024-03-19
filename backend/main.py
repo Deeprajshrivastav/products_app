@@ -28,3 +28,5 @@ app.include_router(cart.router)
 def greet(current_user:str=Depends(oath2.get_current_user)):
     print(current_user)
     return {"message": current_user}
+
+

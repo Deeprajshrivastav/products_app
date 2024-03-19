@@ -28,6 +28,16 @@ class TokenData(BaseModel):
     class ConfigDict:
         from_attributes = True
         
+class ForgotPassword(BaseModel):
+    email: str = None
+    class ConfigDict:
+        from_attributes = True
+
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
+    class ConfigDict:
+        from_attributes = True
+     
 class ProductTypeBaseModel(BaseModel):
     name: str
     desc: Optional[str] = None
