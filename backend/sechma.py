@@ -37,7 +37,13 @@ class EmailSchema(BaseModel):
     email: List[EmailStr]
     class ConfigDict:
         from_attributes = True
-     
+
+class ResetPassword(BaseModel):
+    current_password: str
+    new_password: str
+    class ConfigDict:
+        from_attributes = True
+
 class ProductTypeBaseModel(BaseModel):
     name: str
     desc: Optional[str] = None
