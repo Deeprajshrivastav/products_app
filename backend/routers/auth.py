@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from .. import sechma, utils, oath2
 from fastapi import Depends
 from ..database import SessionLocal, engine, get_db
@@ -15,9 +16,10 @@ router = APIRouter(
 
 @router.post('/login')
 def login_user(user: OAuth2PasswordRequestForm=Depends(), db:SessionLocal = Depends(get_db)):
-    user_login = db.query(models.User).filter(
-        models.User.email == user.username or
-        models.User.username == user.username).first()
+    user_login = db.query(models.User).filter(or_(
+        models.User.email == user.username,
+        models.User.username == user.username)).first()
+    
     if not user_login:
         raise HTTPException(detail="Invalid username or password", status_code=403)
     if not utils.verify(user.password, user_login.password):

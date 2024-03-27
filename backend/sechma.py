@@ -39,8 +39,7 @@ class EmailSchema(BaseModel):
         from_attributes = True
 
 class ResetPassword(BaseModel):
-    current_password: str
-    new_password: str
+    password: str
     class ConfigDict:
         from_attributes = True
 

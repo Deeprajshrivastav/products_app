@@ -68,6 +68,6 @@ async def reset_password(reset_token: str, reset_pswd: sechma.ResetPassword, db:
     user_login = user_login_query.first()
     
     reset_code.status = True
-    user_login.password = utils.hashed_password(reset_pswd.new_password)
+    user_login.password = utils.hashed_password(reset_pswd.password)
     db.commit()
     return {"msg": "password changed"}
