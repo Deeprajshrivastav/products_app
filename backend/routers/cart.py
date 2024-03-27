@@ -1,6 +1,7 @@
 from ..database import get_db, SessionLocal
 from fastapi import APIRouter, Depends, HTTPException, status
 from .. import oath2, models, sechma
+from typing import Optional, List
 
 router = APIRouter()
 
@@ -68,3 +69,27 @@ def product_cart(product_id: int, quantity:int,
         )
     db.commit()
     db.refresh(user_cart)
+
+
+@router.get('/mycart', response_model=List[sechma.MyCart])
+def my_cart(db: SessionLocal = Depends(get_db),
+            current_user: models.User = Depends(oath2.get_current_user)):
+    
+    user_cart = db.query(models.Cart).filter(models.Cart.user_id == current_user.id).first()
+    if user_cart is None:
+        return []
+    
+    cart_item = db.query(models.cart_association).filter_by(cart_id=user_cart.id).all()
+    if cart_item is None:
+        return []
+    
+    cart_products = []
+    for product in cart_item:
+        product_desc = db.query(models.Product).filter(models.Product.id == product.product_id).first()
+        product_desc.quantity = product.quantity
+        cart_products.append(product_desc)        
+    
+    return cart_products
+    
+    
+    

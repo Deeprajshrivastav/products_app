@@ -18,9 +18,9 @@ def verify(plain_password, hash_password):
 async def send_reset_code(email: sechma.EmailSchema, reset_data: str):
     print(type(reset_data))
     html = """<p>Click on the below link to reset your password</p>
-    <a href="http://localhost:8000/reset_password/reset_data{}"> click </a>""".format(reset_data)
+    <a href="http://localhost:3000/reset_password/{}"> click </a>""".format(reset_data)
     message = MessageSchema(
-        subject="Fastapi-Mail module",
+        subject="Reset your password",
         recipients=email.get("email"),
         body=html,
         subtype=MessageType.html)

@@ -44,6 +44,12 @@ class ResetPassword(BaseModel):
     class ConfigDict:
         from_attributes = True
 
+class ChangedPassword(BaseModel):
+    current_password: str
+    new_password: str
+    class ConfigDict:
+        from_attributes = True
+
 class ProductTypeBaseModel(BaseModel):
     name: str
     desc: Optional[str] = None
@@ -92,3 +98,9 @@ class Cart(BaseModel):
     item: List[AddToCart]
     class ConfigDict:
         from_attributes = True
+
+class MyCart(ProductBaseModel):
+    quantity: int
+    class ConfigDict:
+        from_attributes = True
+    

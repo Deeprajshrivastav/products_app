@@ -25,7 +25,6 @@ cart_association = Table(
     Column('product_id', Integer, ForeignKey('products.id')),
     Column('quantity', Integer),
     PrimaryKeyConstraint('cart_id', 'product_id')
-
 )
 
 
