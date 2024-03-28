@@ -24,6 +24,9 @@ app.include_router(products.router)
 app.include_router(cart.router)
 
 
+
+
+
 @app.delete("/")
 def greet(current_user:str=Depends(oath2.get_current_user)):
     print(current_user)

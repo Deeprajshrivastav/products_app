@@ -49,6 +49,12 @@ class ChangedPassword(BaseModel):
     class ConfigDict:
         from_attributes = True
 
+class UserProfileUpdate(BaseModel):
+    fullname: Optional[str] = None
+    address: Optional[str] = None
+    class ConfigDict:
+        from_attributes = True
+
 class ProductTypeBaseModel(BaseModel):
     name: str
     desc: Optional[str] = None

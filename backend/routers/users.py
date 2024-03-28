@@ -28,14 +28,15 @@ def singup_user(userdata: sechma.UserSingup, db:SessionLocal = Depends(get_db)):
     return user
 
 @router.patch('/changed-password')
-def changed_password(password: sechma.ChangedPassword,
+def changed_password(changed_password: sechma.ChangedPassword,
                      db:SessionLocal = Depends(get_db),
                      current_user: models.User = Depends(oath2.get_current_user)):
-    if not current_user.password == utils.verify(password.current_password, current_user.password):
+
+    if not utils.verify(changed_password.current_password, current_user.password):
         print("passwords do not match")
-    else:
-        print("passwords do match")
-    pass
+        raise HTTPException(detail="Password does not matched", status_code=403)
+    current_user.password = utils.hashed_password(changed_password.new_password)
+    return {"details": "password changed successfully"}
     
 @router.post('/forgot-password')
 async def forgot_password(forgot_password: sechma.ForgotPassword, db:SessionLocal = Depends(get_db), background_tasks: BackgroundTasks=None):
@@ -71,3 +72,18 @@ async def reset_password(reset_token: str, reset_pswd: sechma.ResetPassword, db:
     user_login.password = utils.hashed_password(reset_pswd.password)
     db.commit()
     return {"msg": "password changed"}
+
+@router.get('/profile')
+def view_profile(db:SessionLocal = Depends(get_db), 
+                 current_user: models.User = Depends(oath2.get_current_user)):
+    return {"username": current_user.username}
+
+
+@router.patch('/profile')
+def view_profile(user_profile: UserProfileUpdate,
+                 db:SessionLocal = Depends(get_db), 
+                 current_user: models.User = Depends(oath2.get_current_user)):
+    current_user.fullname = user_profile.fullname
+    current_user.address = user_profile.address
+    db.commit()
+    return {"msg": "profile updated"}
