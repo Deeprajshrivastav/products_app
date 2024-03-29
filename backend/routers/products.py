@@ -66,3 +66,17 @@ def create_order(order_data: sechma.OrderCreate,
     except Exception as error:
         raise HTTPException(status_code=500, detail=f"Eror: {error}")
 
+@router.get('/products-category')
+def get_products_category(db: SessionLocal = Depends(get_db)):
+    return {'category': ['Casual Wear', 'Formal Attire', 'Sportswear', 'Business Casual', 'Uniforms']}
+
+
+@router.get('/products/category/{category}')
+def get_products_by_category(category: str, db: SessionLocal = Depends(get_db)):
+    product_type = db.query(models.ProductType).filter(models.ProductType.name == category).first()
+    if product_type is None:
+        return {"details": "Not found"}
+    products = db.query(models.Product).filter(models.Product.product_type_id == product_type.id).all()
+    return products 
+    
+    

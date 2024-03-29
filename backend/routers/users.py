@@ -74,16 +74,17 @@ async def reset_password(reset_token: str, reset_pswd: sechma.ResetPassword, db:
     return {"msg": "password changed"}
 
 @router.get('/profile')
-def view_profile(db:SessionLocal = Depends(get_db), 
-                 current_user: models.User = Depends(oath2.get_current_user)):
+def view_profile(current_user: models.User = Depends(oath2.get_current_user)):
     return {"username": current_user.username}
 
 
 @router.patch('/profile')
-def view_profile(user_profile: UserProfileUpdate,
+def view_profile(user_profile: sechma.UserProfileUpdate,
                  db:SessionLocal = Depends(get_db), 
                  current_user: models.User = Depends(oath2.get_current_user)):
     current_user.fullname = user_profile.fullname
     current_user.address = user_profile.address
     db.commit()
     return {"msg": "profile updated"}
+
+# @router

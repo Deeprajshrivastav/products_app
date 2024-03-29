@@ -19,6 +19,7 @@ def login_user(user: OAuth2PasswordRequestForm=Depends(), db:SessionLocal = Depe
     user_login = db.query(models.User).filter(or_(
         models.User.email == user.username,
         models.User.username == user.username)).first()
+    
     if not user_login:
         raise HTTPException(detail="Invalid username or password", status_code=403)
     if not utils.verify(user.password, user_login.password):

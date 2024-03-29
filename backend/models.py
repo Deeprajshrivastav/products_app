@@ -65,6 +65,8 @@ class Product(Base):
     price = Column(Integer)
     product_type_id = Column(Integer, ForeignKey('product_types.id'))
     name = Column(String, index=True)
+    description = Column(String)
+    image_url = Column(String)
     product_type = relationship('ProductType')
     orders = relationship('Order', secondary=buy_product_association, back_populates='products')
     carts = relationship('Cart', secondary=cart_association, back_populates='items')
