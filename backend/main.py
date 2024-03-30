@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends
-from .routers import users, auth, products, cart
+from .routers import users, auth, products, cart, order
 from .database import SessionLocal, engine, get_db
 from fastapi.middleware.cors import CORSMiddleware
 from . import models
@@ -22,14 +22,8 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(products.router)
 app.include_router(cart.router)
+app.include_router(order.router)
 
 
-
-
-
-@app.delete("/")
-def greet(current_user:str=Depends(oath2.get_current_user)):
-    print(current_user)
-    return {"message": current_user}
 
 
